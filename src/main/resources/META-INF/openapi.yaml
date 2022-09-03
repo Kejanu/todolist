@@ -1,0 +1,123 @@
+openapi: 3.0.1
+info:
+  title: API Description for NuzlockeHelper
+  version: "1.0"
+
+servers:
+  - url: http://localhost:8080/
+    description: Optional dev mode server description
+
+paths:
+  /tasks:
+    get:
+      tags:
+        - tasks
+      operationId: getTasks
+      responses:
+        200:
+          description: returns all tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+    post:
+      tags:
+        - tasks
+      operationId: createTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskInput"
+      responses:
+        201:
+          description: creates a task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  /tasks/{taskId}:
+    get:
+      tags:
+        - tasks
+      operationId: getTask
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: returns the task with the given id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+    put:
+      tags:
+        - tasks
+      operationId: updateTask
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskInput"
+      responses:
+        200:
+          description: returns all tasks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+    delete:
+      tags:
+        - tasks
+      operationId: deleteTask
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: confirms that the task was deleted
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        status:
+          $ref: "#/components/schemas/TaskStatus"
+
+    TaskInput:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        status:
+          $ref: "#/components/schemas/TaskStatus"
+
+    TaskStatus:
+      enum:
+        - TODO
+        - DONE
